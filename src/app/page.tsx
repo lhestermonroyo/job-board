@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -9,7 +11,11 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from '@/components/ui/sidebar';
+import Link from 'next/link';
+import { LogInIcon } from 'lucide-react';
 import { AppSidebarClient } from './_AppSidebarClient';
+import { SignedIn, SignedOut } from '@/services/clerk/components/SignInStatus';
+import { SidebarUserButton } from '@/features/users/components/SidebarUserButton';
 
 export default function HomePage() {
   return (
@@ -20,14 +26,33 @@ export default function HomePage() {
             <SidebarTrigger />
             <span className="text-xl text-wrap">JobPilot</span>
           </SidebarHeader>
-          <SidebarContent>Text</SidebarContent>
-          <SidebarFooter>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>Button 1</SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarFooter>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarMenu>
+                <Suspense>
+                  <SignedOut>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <Link href="sign-in">
+                          <LogInIcon />
+                          <span>Log In</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SignedOut>
+                </Suspense>
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+          <SignedIn>
+            <SidebarFooter>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarUserButton />
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarFooter>
+          </SignedIn>
         </Sidebar>
         <main className="flex-1">Content</main>
       </AppSidebarClient>
