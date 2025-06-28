@@ -1,6 +1,7 @@
 import { serve } from 'inngest/next';
 import { inngest } from '@/services/inngest/client';
 import {
+  clerkCreateOrganization,
   clerkCreateUser,
   clerkDeleteUser,
   clerkUpdateUser
@@ -12,7 +13,7 @@ export const { GET, POST, PUT } = serve({
   functions: [
     clerkCreateUser,
     clerkUpdateUser,
-    clerkDeleteUser // This is the function we created in src/services/inngest/functions/clerk.ts
-    /* your functions will be passed here later! */
+    clerkDeleteUser,
+    clerkCreateOrganization
   ]
 });
