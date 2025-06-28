@@ -20,7 +20,7 @@ export const wageIntervals = [
   'monthly',
   'yearly'
 ] as const;
-type WageInterval = (typeof wageIntervals)[number];
+export type WageInterval = (typeof wageIntervals)[number];
 
 export const wageIntervalEnum = pgEnum(
   'job_listing_wage_interval',
@@ -28,7 +28,7 @@ export const wageIntervalEnum = pgEnum(
 );
 
 export const locationRequirements = ['remote', 'onsite', 'hybrid'] as const;
-type LocationRequirement = (typeof locationRequirements)[number];
+export type LocationRequirement = (typeof locationRequirements)[number];
 
 export const locationRequirementEnum = pgEnum(
   'job_listing_location_requirement',
@@ -36,7 +36,7 @@ export const locationRequirementEnum = pgEnum(
 );
 
 export const experienceLevels = ['junior', 'mid-level', 'senior'] as const;
-type ExperienceLevel = (typeof experienceLevels)[number];
+export type ExperienceLevel = (typeof experienceLevels)[number];
 
 export const experienceLevelEnum = pgEnum(
   'job_listing_experience_level',
@@ -44,7 +44,7 @@ export const experienceLevelEnum = pgEnum(
 );
 
 export const jobListingStatuses = ['draft', 'published', 'delisted'] as const;
-type JobListingStatus = (typeof jobListingStatuses)[number];
+export type JobListingStatus = (typeof jobListingStatuses)[number];
 export const jobListingStatusEnum = pgEnum(
   'job_listing_status',
   jobListingStatuses
@@ -56,7 +56,7 @@ export const jobListingTypes = [
   'part-time',
   'contract'
 ] as const;
-type JobListingType = (typeof jobListingTypes)[number];
+export type JobListingType = (typeof jobListingTypes)[number];
 export const jobListingTypeEnum = pgEnum('job_listing_type', jobListingTypes);
 
 export const JobListingTable = pgTable(
