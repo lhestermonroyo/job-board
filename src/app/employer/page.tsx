@@ -10,12 +10,12 @@ import { getJobListingOrganizationTag } from '@/features/jobListings/db/cache/jo
 export default function EmployerHomePage() {
   return (
     <Suspense>
-      <SuspendedPage />
+      <SuspensePage />
     </Suspense>
   );
 }
 
-async function SuspendedPage() {
+async function SuspensePage() {
   const { orgId } = await getCurrentOrganization({ allData: true });
 
   if (!orgId) {

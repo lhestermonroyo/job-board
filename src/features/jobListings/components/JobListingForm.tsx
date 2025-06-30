@@ -5,11 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
   experienceLevels,
+  JobListingTable,
   jobListingTypes,
   locationRequirements,
   wageIntervals
 } from '@/drizzle/schema';
 import { jobListingSchema } from './actions/schemas';
+import { createJobListing, updateJobListing } from './actions/actions';
 import {
   formatExperienceLevel,
   formatJobType,
@@ -33,17 +35,32 @@ import {
   SelectContent,
   SelectValue
 } from '@/components/ui/select';
-import StateSelectItem from './StateSelectItem';
 import { Button } from '@/components/ui/button';
-import { MarkdownEditor } from '@/components/markdown/MarkdownEditor';
-import LoadingSwap from '@/components/LoadingSwap';
-import { createJobListing } from './actions/actions';
 import { toast } from 'sonner';
+import { MarkdownEditor } from '@/components/markdown/MarkdownEditor';
+import StateSelectItem from './StateSelectItem';
+import LoadingSwap from '@/components/LoadingSwap';
 
-export default function JobListingForm() {
+export default function JobListingForm({
+  jobListing
+}: {
+  jobListing?: Pick<
+    typeof JobListingTable.$inferSelect,
+    | 'id'
+    | 'title'
+    | 'wage'
+    | 'wageInterval'
+    | 'city'
+    | 'stateAbbreviation'
+    | 'type'
+    | 'experienceLevel'
+    | 'locationRequirement'
+    | 'description'
+  >;
+}) {
   const form = useForm({
     resolver: zodResolver(jobListingSchema),
-    defaultValues: {
+    defaultValues: jobListing ?? {
       title: '',
       wage: null,
       wageInterval: 'yearly',
@@ -57,7 +74,10 @@ export default function JobListingForm() {
   });
 
   async function onSubmit(data: z.infer<typeof jobListingSchema>) {
-    const res = await createJobListing(data);
+    const action = jobListing
+      ? updateJobListing.bind(null, jobListing.id)
+      : createJobListing;
+    const res = await action(data);
 
     if (res.error) {
       toast.error(res.message);
