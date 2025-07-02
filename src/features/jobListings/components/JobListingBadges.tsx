@@ -1,13 +1,7 @@
-import { Badge } from '@/components/ui/badge';
-import { JobListingTable } from '@/drizzle/schema';
-import { cn } from '@/lib/utils';
 import { ComponentProps, Fragment } from 'react';
-import {
-  formatExperienceLevel,
-  formatLocation,
-  formatLocationRequirement,
-  formatWage
-} from '../lib/formatters';
+import { cn } from '@/lib/utils';
+import { JobListingTable } from '@/drizzle/schema';
+import { Badge } from '@/components/ui/badge';
 import {
   BanknoteIcon,
   BuildingIcon,
@@ -15,6 +9,12 @@ import {
   HourglassIcon,
   MapPinIcon
 } from 'lucide-react';
+import {
+  formatExperienceLevel,
+  formatLocation,
+  formatLocationRequirement,
+  formatWage
+} from '../lib/formatters';
 
 export function JobListingBadges({
   jobListing: {
@@ -49,7 +49,7 @@ export function JobListingBadges({
 
   return (
     <Fragment>
-      {!isFeatured && (
+      {isFeatured && (
         <Badge
           {...badgeProps}
           className={cn(
