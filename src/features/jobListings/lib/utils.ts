@@ -11,3 +11,16 @@ export function getNextJobListingStatus(status: JobListingStatus) {
       throw new Error(`Invalid job listing status: ${status satisfies never}`);
   }
 }
+
+export function sortJobListingStatus(
+  statusA: JobListingStatus,
+  statusB: JobListingStatus
+) {
+  return JOB_LISTING_STATUS_ORDER[statusA] - JOB_LISTING_STATUS_ORDER[statusB];
+}
+
+const JOB_LISTING_STATUS_ORDER: Record<JobListingStatus, number> = {
+  published: 0,
+  draft: 1,
+  delisted: 2
+};

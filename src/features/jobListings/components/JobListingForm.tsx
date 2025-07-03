@@ -302,7 +302,7 @@ export default function JobListingForm({
           disabled={form.formState.isSubmitting}
         >
           <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Create Job Listing
+            {jobListing ? 'Update Job Listing' : 'Create Job Listing'}
           </LoadingSwap>
         </Button>
       </form>
