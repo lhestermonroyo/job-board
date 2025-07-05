@@ -52,7 +52,6 @@ export async function createJobListingApplication(
     coverLetter: data.coverLetter
   });
 
-  // TODO: AI generation
   await inngest.send({
     name: 'app/jobListingApplication.created',
     data: {
@@ -63,7 +62,7 @@ export async function createJobListingApplication(
 
   return {
     error: false,
-    message: 'Application submitted successfully.'
+    message: 'Application submitted successfully!'
   };
 }
 

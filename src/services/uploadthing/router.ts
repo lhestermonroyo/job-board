@@ -48,7 +48,7 @@ export const customFileRouter = {
         }
       });
 
-      return { message: 'Resume uploaded successfully' };
+      return { message: 'Resume uploaded successfully!' };
     })
 } satisfies FileRouter;
 

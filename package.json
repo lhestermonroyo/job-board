@@ -17,6 +17,7 @@
     "@clerk/nextjs": "^6.22.0",
     "@clerk/themes": "^2.2.50",
     "@hookform/resolvers": "^5.1.1",
+    "@inngest/agent-kit": "^0.9.0",
     "@mdxeditor/editor": "^3.37.0",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",

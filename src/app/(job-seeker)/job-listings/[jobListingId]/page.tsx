@@ -1,42 +1,49 @@
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup
-} from '@/components/ui/resizable';
 import { Fragment, Suspense } from 'react';
-import JobListingItems from '../../_shared/JobListingItems';
-import { IsBreakpoint } from '@/components/IsBreakpoint';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { differenceInDays } from 'date-fns';
+import { and, eq } from 'drizzle-orm';
+import { db } from '@/drizzle/db';
+import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
+import { getJobListingIdTag } from '@/features/jobListings/db/cache/jobListings';
+import { getUserResumeIdTag } from '@/features/users/db/cache/userResumes';
+import { getJobListingApplicationIdTag } from '@/features/jobListingApplications/db/cache/jobListingApplications';
+import { getCurrentUser } from '@/services/clerk/lib/getCurrentAuth';
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import ClientSheet from './_ClientSheet';
-import { db } from '@/drizzle/db';
-import { and, eq, or } from 'drizzle-orm';
 import {
   JobListingApplicationTable,
   JobListingTable,
   UserResumeTable
 } from '@/drizzle/schema';
-import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
-import { getJobListingIdTag } from '@/features/jobListings/db/cache/jobListings';
 import { getOrganizationIdTag } from '@/features/organizations/db/cache/organization';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { AvatarFallback } from '@radix-ui/react-avatar';
-import { notFound } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import { convertSearchParamsToString } from '@/lib/convertSearchParamsToString';
 import { XIcon } from 'lucide-react';
-import Link from 'next/link';
-import { JobListingBadges } from '@/features/jobListings/components/JobListingBadges';
-import MarkdownRenderer from '@/components/markdown/MarkdownRenderer';
-import { Popover, PopoverContent } from '@/components/ui/popover';
-import { PopoverTrigger } from '@radix-ui/react-popover';
-import { getCurrentUser } from '@/services/clerk/lib/getCurrentAuth';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup
+} from '@/components/ui/resizable';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import { SignUpButton } from '@/services/clerk/components/AuthButtons';
-import { getJobListingApplicationIdTag } from '@/features/jobListingApplications/db/cache/jobListingApplications';
-import { differenceInDays } from 'date-fns';
-import { getUserResumeIdTag } from '@/features/users/db/cache/userResumes';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { DialogDescription, DialogTrigger } from '@radix-ui/react-dialog';
+import { IsBreakpoint } from '@/components/IsBreakpoint';
+import { JobListingBadges } from '@/features/jobListings/components/JobListingBadges';
+import JobListingItems from '../../_shared/JobListingItems';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import MarkdownRenderer from '@/components/markdown/MarkdownRenderer';
 import NewApplicationForm from '@/features/jobListingApplications/components/NewApplicationForm';
 
 export default function JobListingPage({
@@ -58,7 +65,7 @@ export default function JobListingPage({
           breakpoint="min-width: 1024px"
           otherwise={
             <ClientSheet>
-              <SheetContent hideCloseButton className="p-4">
+              <SheetContent hideCloseButton className="p-4 overflow-y-auto">
                 <SheetHeader className="sr-only">
                   <SheetTitle>Job Listing Details</SheetTitle>
                 </SheetHeader>
@@ -160,7 +167,7 @@ async function JobListingDetails({
         </Suspense>
       </div>
 
-      <MarkdownRenderer source={jobListing.description} className="prose-sm" />
+      <MarkdownRenderer source={jobListing.description} />
     </div>
   );
 }

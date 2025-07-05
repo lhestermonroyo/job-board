@@ -82,6 +82,7 @@ async function SuspenseComponent({ searchParams, params }: Props) {
           <JobListingListItem
             jobListing={job}
             organization={job.organization}
+            isActive={job.id === jobListingId}
           />
         </Link>
       ))}
@@ -91,7 +92,8 @@ async function SuspenseComponent({ searchParams, params }: Props) {
 
 function JobListingListItem({
   jobListing,
-  organization
+  organization,
+  isActive = false
 }: {
   jobListing: Pick<
     typeof JobListingTable.$inferSelect,
@@ -110,6 +112,7 @@ function JobListingListItem({
     typeof OrganizationTable.$inferSelect,
     'name' | 'imageUrl'
   >;
+  isActive?: boolean;
 }) {
   const orgInitials = organization.name
     .split(' ')
@@ -121,7 +124,8 @@ function JobListingListItem({
     <Card
       className={cn(
         '@container',
-        jobListing?.isFeatured && 'border-featured bg-featured/20'
+        jobListing?.isFeatured && 'border-featured bg-featured/20',
+        isActive && 'border-primary bg-primary/10'
       )}
     >
       <CardHeader>

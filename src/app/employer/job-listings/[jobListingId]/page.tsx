@@ -39,6 +39,7 @@ import {
 import { AsyncIf } from '@/components/AsyncIf';
 import { ActionButton } from '@/components/ActionButton';
 import { JobListingBadges } from '@/features/jobListings/components/JobListingBadges';
+import { cachedDataVersionTag } from 'v8';
 
 type Props = {
   params: Promise<{ jobListingId: string }>;
@@ -113,18 +114,8 @@ async function SuspensePage({ params }: Props) {
 
       <MarkdownPartial
         dialogTitle="Description"
-        dialogMarkdown={
-          <MarkdownRenderer
-            className="prose-sm"
-            source={jobListing.description}
-          />
-        }
-        mainMarkdown={
-          <MarkdownRenderer
-            className="prose-sm"
-            source={jobListing.description}
-          />
-        }
+        dialogMarkdown={<MarkdownRenderer source={jobListing.description} />}
+        mainMarkdown={<MarkdownRenderer source={jobListing.description} />}
       />
     </div>
   );
