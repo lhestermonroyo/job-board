@@ -1,15 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { SignOutButton, useClerk } from '@clerk/nextjs';
+import { useClerk } from '@clerk/nextjs';
 import {
   ArrowLeftRightIcon,
   Building2Icon,
   ChevronsUpDown,
   CreditCardIcon,
   LogOutIcon,
-  SettingsIcon,
-  UserIcon,
   UserRoundCogIcon
 } from 'lucide-react';
 import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
@@ -22,6 +20,7 @@ import {
   DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { SignOutButton } from '@/services/clerk/components/AuthButtons';
 
 type UserProps = {
   email: string;

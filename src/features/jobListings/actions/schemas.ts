@@ -10,7 +10,7 @@ export const jobListingSchema = z
   .object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().min(1, 'Description is required'),
-    experienceLevel: z.enum(experienceLevels ),
+    experienceLevel: z.enum(experienceLevels),
     locationRequirement: z.enum(locationRequirements),
     type: z.enum(jobListingTypes),
     wage: z.number().int().positive().min(1).nullable(),
@@ -45,3 +45,4 @@ export const jobListingSchema = z
       path: ['stateAbbreviation']
     }
   );
+

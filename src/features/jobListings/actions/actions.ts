@@ -5,21 +5,21 @@ import { redirect } from 'next/navigation';
 import { db } from '@/drizzle/db';
 import { and, eq } from 'drizzle-orm';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
-import { getJobListingIdTag } from '../../db/cache/jobListings';
+import { getJobListingIdTag } from '../db/cache/jobListings';
 import { JobListingTable } from '@/drizzle/schema';
 import { jobListingSchema } from './schemas';
 import {
   insertJobListing,
   updateJobListing as updateJobListingDb,
   deleteJobListing as deleteJobListingDb
-} from '../../db/jobListings';
+} from '../db/jobListings';
 import { getCurrentOrganization } from '@/services/clerk/lib/getCurrentAuth';
 import { hasOrgUserPermission } from '@/services/clerk/lib/orgUserPermissions';
-import { getNextJobListingStatus } from '../../lib/utils';
+import { getNextJobListingStatus } from '../lib/utils';
 import {
   hasReachedMaxFeaturedJobListings,
   hasReachedMaxPublishedJobListings
-} from '../../lib/planFeatureHelpers';
+} from '../lib/planFeatureHelpers';
 
 async function getJobListing(id: string, orgId: string) {
   'use cache';
@@ -62,7 +62,7 @@ export async function createJobListing(
   if (!success) {
     return {
       error: true,
-      message: 'Invalid job listing data'
+      message: 'Invalid job listing data.'
     };
   }
 
@@ -105,7 +105,7 @@ export async function updateJobListing(
   if (!success) {
     return {
       error: true,
-      message: 'Invalid job listing data'
+      message: 'Invalid job listing data.'
     };
   }
 

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 import {
   BrainCircuitIcon,
   ClipboardListIcon,
@@ -9,7 +9,13 @@ import AppSidebar from '@/components/sidebar/AppSidebar';
 import SidebarUserButton from '@/features/users/components/SidebarUserButton';
 import SidebarNavMenuGroup from '@/components/sidebar/SidebarNavMenuGroup';
 
-export default function JobSeekerLayout({ children }: { children: ReactNode }) {
+export default function JobSeekerLayout({
+  children,
+  sidebar
+}: {
+  children: ReactNode;
+  sidebar: ReactNode;
+}) {
   const navItems = [
     {
       href: '/',
@@ -37,7 +43,12 @@ export default function JobSeekerLayout({ children }: { children: ReactNode }) {
 
   return (
     <AppSidebar
-      content={<SidebarNavMenuGroup className="mt-auto" items={navItems} />}
+      content={
+        <Fragment>
+          {sidebar}
+          <SidebarNavMenuGroup className="mt-auto" items={navItems} />
+        </Fragment>
+      }
       footerButton={<SidebarUserButton />}
     >
       {children}

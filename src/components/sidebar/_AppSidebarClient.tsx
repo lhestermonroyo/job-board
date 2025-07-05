@@ -1,8 +1,8 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { ReactNode } from 'react';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export function AppSidebarClient({
   children
@@ -16,7 +16,10 @@ export function AppSidebarClient({
       <div className="flex flex-col w-full">
         <div className="p-2 border-b flex items-center gap-1">
           <SidebarTrigger />
-          <span className="text-xl">JobPilot</span>
+          <span className="text-2xl text-wrap font-light tracking-wide">
+            <span className="font-semibold text-featured">Job</span>
+            Pilot
+          </span>
         </div>
         <div className="flex-1 flex">{children}</div>
       </div>

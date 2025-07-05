@@ -10,8 +10,8 @@ import {
   locationRequirements,
   wageIntervals
 } from '@/drizzle/schema';
-import { jobListingSchema } from './actions/schemas';
-import { createJobListing, updateJobListing } from './actions/actions';
+import { jobListingSchema } from '../actions/schemas';
+import { createJobListing, updateJobListing } from '../actions/actions';
 import {
   formatExperienceLevel,
   formatJobType,
@@ -77,10 +77,10 @@ export default function JobListingForm({
     const action = jobListing
       ? updateJobListing.bind(null, jobListing.id)
       : createJobListing;
-    const res = await action(data);
+    const result = await action(data);
 
-    if (res.error) {
-      toast.error(res.message);
+    if (result.error) {
+      toast.error(result.message);
     }
   }
 
@@ -289,7 +289,7 @@ export default function JobListingForm({
                 <MarkdownEditor
                   {...field}
                   markdown={field.value ?? ''}
-                  placeholder="Enter job description"
+                  placeholder="Compose job description"
                 />
               </FormControl>
               <FormMessage />

@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { SignOutButton } from '@clerk/nextjs';
 import { LogOutIcon } from 'lucide-react';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
 import {
@@ -7,6 +6,7 @@ import {
   getCurrentUser
 } from '@/services/clerk/lib/getCurrentAuth';
 import SidebarOrganizationButtonClient from './_SidebarOrganizationButtonClient';
+import { SignOutButton } from '@/services/clerk/components/AuthButtons';
 
 export default function SidebarOrganizationButton() {
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { SignOutButton, useClerk } from '@clerk/nextjs';
+import { useClerk } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -18,6 +18,7 @@ import {
   SettingsIcon,
   UserIcon
 } from 'lucide-react';
+import { SignOutButton } from '@/services/clerk/components/AuthButtons';
 
 type UserProps = {
   email: string;
@@ -59,8 +60,8 @@ export default function SidebarUserButtonClient({ user }: { user: UserProps }) {
           <UserIcon className="mr-1" /> Profile
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/user/settings/notifications">
-            <SettingsIcon className="mr-1" /> Notifications
+          <Link href="/user-settings/notifications">
+            <SettingsIcon className="mr-1" /> Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

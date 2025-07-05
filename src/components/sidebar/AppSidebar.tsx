@@ -27,7 +27,11 @@ export default function AppSidebar({
         <Sidebar collapsible="icon" className="overflow-hidden">
           <SidebarHeader className="flex-row">
             <SidebarTrigger />
-            <span className="text-xl text-wrap">JobPilot</span>
+
+            <span className="text-2xl text-wrap font-light tracking-wide">
+              <span className="font-semibold text-featured">Job</span>
+              Pilot
+            </span>
           </SidebarHeader>
           <SidebarContent>{content}</SidebarContent>
           <SignedIn>

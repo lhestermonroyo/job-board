@@ -18,7 +18,7 @@ import {
   deleteJobListing,
   toggleJobListingFeatured,
   toggleJobListingStatus
-} from '@/features/jobListings/components/actions/actions';
+} from '@/features/jobListings/actions/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

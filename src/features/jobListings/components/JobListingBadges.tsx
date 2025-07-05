@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import {
   formatExperienceLevel,
+  formatJobType,
   formatLocation,
   formatLocationRequirement,
   formatWage
@@ -82,7 +83,7 @@ export function JobListingBadges({
 
       <Badge {...badgeProps}>
         <HourglassIcon />
-        {formatLocationRequirement(locationRequirement)}
+        {formatJobType(type)}
       </Badge>
 
       <Badge {...badgeProps}>
