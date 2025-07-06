@@ -8,6 +8,13 @@
       "when": 1751203953502,
       "tag": "0000_colorful_gambit",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751818243038,
+      "tag": "0001_magical_lockjaw",
+      "breakpoints": true
     }
   ]
 }

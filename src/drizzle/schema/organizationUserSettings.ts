@@ -21,9 +21,6 @@ export const OrganizationUserSettingsTable = pgTable(
       .references(() => OrganizationTable.id),
     newApplicationEmailNotifications: boolean().notNull().default(false),
     minimumRating: integer(),
-    name: varchar().notNull(),
-    imageUrl: varchar().notNull(),
-    email: varchar().notNull().unique(),
     createdAt,
     updatedAt
   },

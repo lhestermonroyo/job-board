@@ -9,6 +9,10 @@ import {
   insertOrganization,
   updateOrganization
 } from '@/features/organizations/db/organizations';
+import {
+  deleteOrganizationUserSettings,
+  insertOrganizationUserSettings
+} from '@/features/organizations/db/organizationUserSettings';
 
 function verifyWebhook({
   raw,
@@ -29,7 +33,6 @@ export const clerkCreateUser = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         throw new NonRetriableError('Invalid webhook');
@@ -72,7 +75,6 @@ export const clerkUpdateUser = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         throw new NonRetriableError('Invalid webhook');
@@ -107,7 +109,6 @@ export const clerkDeleteUser = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         throw new NonRetriableError('Invalid webhook');
@@ -138,7 +139,6 @@ export const clerkCreateOrganization = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         console.log('Error verifying webhook:', error);
@@ -171,7 +171,6 @@ export const clerkUpdateOrganization = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         throw new NonRetriableError('Invalid webhook');
@@ -201,7 +200,6 @@ export const clerkDeleteOrganization = inngest.createFunction(
   async ({ event, step }) => {
     await step.run('verify-webhook', async () => {
       try {
-        // Verify the webhook signature
         verifyWebhook(event.data);
       } catch (error) {
         throw new NonRetriableError('Invalid webhook');
@@ -216,6 +214,64 @@ export const clerkDeleteOrganization = inngest.createFunction(
       }
 
       await deleteOrganization(id);
+    });
+  }
+);
+
+export const clerkCreateOrgMembership = inngest.createFunction(
+  {
+    id: 'clerk/create-organization-user-settings',
+    name: 'Clerk - Create Organization User Settings'
+  },
+  {
+    event: 'clerk/organizationMembership.created'
+  },
+  async ({ event, step }) => {
+    await step.run('verify-webhook', async () => {
+      try {
+        verifyWebhook(event.data);
+      } catch {
+        throw new NonRetriableError('Invalid webhook');
+      }
+    });
+
+    await step.run('create-organization-user-settings', async () => {
+      const userId = event.data.data.public_user_data.user_id;
+      const orgId = event.data.data.organization.id;
+
+      await insertOrganizationUserSettings({
+        userId,
+        organizationId: orgId
+      });
+    });
+  }
+);
+
+export const clerkDeleteOrgMembership = inngest.createFunction(
+  {
+    id: 'clerk/delete-organization-user-settings',
+    name: 'Clerk - Delete Organization User Settings'
+  },
+  {
+    event: 'clerk/organizationMembership.deleted'
+  },
+  async ({ event, step }) => {
+    await step.run('verify-webhook', async () => {
+      try {
+        verifyWebhook(event.data);
+      } catch {
+        throw new NonRetriableError('Invalid webhook');
+      }
+    });
+
+    await step.run('delete-organization-user-settings', async () => {
+      const userId = event.data.data.public_user_data.user_id;
+      const orgId = event.data.data.organization.id;
+
+      await deleteOrganizationUserSettings({
+        userId,
+        organizationId: orgId
+      });
     });
   }
 );
