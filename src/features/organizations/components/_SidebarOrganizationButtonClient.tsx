@@ -39,7 +39,7 @@ export default function SidebarOrganizationButtonClient({
   organization: OrganizationProps;
 }) {
   const { isMobile, setOpenMobile } = useSidebar();
-  const { openUserProfile } = useClerk();
+  const { openOrganizationProfile } = useClerk();
 
   return (
     <DropdownMenu>
@@ -64,8 +64,8 @@ export default function SidebarOrganizationButtonClient({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            openUserProfile();
-            setOpenMobile(false); // Close the dropdown after opening profile
+            openOrganizationProfile();
+            setOpenMobile(false);
           }}
         >
           <Building2Icon className="mr-1" /> Manage Organization
@@ -80,6 +80,7 @@ export default function SidebarOrganizationButtonClient({
             <CreditCardIcon className="mr-1" /> Change Plan
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/organizations/select">
             <ArrowLeftRightIcon className="mr-1" /> Switch Organizations

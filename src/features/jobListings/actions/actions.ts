@@ -5,21 +5,28 @@ import { redirect } from 'next/navigation';
 import { db } from '@/drizzle/db';
 import { and, eq } from 'drizzle-orm';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
-import { getJobListingIdTag } from '../db/cache/jobListings';
+import {
+  getJobListingGlobalTag,
+  getJobListingIdTag
+} from '../db/cache/jobListings';
 import { JobListingTable } from '@/drizzle/schema';
-import { jobListingSchema } from './schemas';
+import { jobListingAISearchSchema, jobListingSchema } from './schemas';
 import {
   insertJobListing,
   updateJobListing as updateJobListingDb,
   deleteJobListing as deleteJobListingDb
 } from '../db/jobListings';
-import { getCurrentOrganization } from '@/services/clerk/lib/getCurrentAuth';
+import {
+  getCurrentOrganization,
+  getCurrentUser
+} from '@/services/clerk/lib/getCurrentAuth';
 import { hasOrgUserPermission } from '@/services/clerk/lib/orgUserPermissions';
 import { getNextJobListingStatus } from '../lib/utils';
 import {
   hasReachedMaxFeaturedJobListings,
   hasReachedMaxPublishedJobListings
 } from '../lib/planFeatureHelpers';
+import { getMatchingJobListings } from '@/services/inngest/ai/getMatchingJobListings';
 
 async function getJobListing(id: string, orgId: string) {
   'use cache';
@@ -258,4 +265,61 @@ export async function toggleJobListingFeatured(id: string) {
     error: false,
     message: `Job listing featured status updated to ${newFeaturedStatus}.`
   };
+}
+
+export async function getAIJobListingSearchResults(
+  unsafeData: z.infer<typeof jobListingAISearchSchema>
+): Promise<
+  | {
+      error: true;
+      message: string;
+    }
+  | {
+      error: false;
+      jobIds: string[];
+    }
+> {
+  const { success, data } = jobListingAISearchSchema.safeParse(unsafeData);
+
+  if (!success) {
+    return {
+      error: true,
+      message: 'Invalid search query data.'
+    };
+  }
+
+  const { userId } = await getCurrentUser();
+
+  if (!userId) {
+    return {
+      error: true,
+      message: 'You must be logged in to perform an AI job search.'
+    };
+  }
+
+  const listings = await getPublicJobListings();
+  const matchedListings = await getMatchingJobListings(data.query, listings, {
+    maxNumberOfJobs: 10
+  });
+
+  if (matchedListings.length === 0) {
+    return {
+      error: true,
+      message: 'No job listings matched your search criteria.'
+    };
+  }
+
+  return {
+    error: false,
+    jobIds: matchedListings
+  };
+}
+
+async function getPublicJobListings() {
+  'use cache';
+  cacheTag(getJobListingGlobalTag());
+
+  return db.query.JobListingTable.findMany({
+    where: eq(JobListingTable.status, 'published')
+  });
 }

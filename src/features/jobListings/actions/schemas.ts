@@ -46,3 +46,6 @@ export const jobListingSchema = z
     }
   );
 
+export const jobListingAISearchSchema = z.object({
+  query: z.string().min(1, 'Search query is required')
+});

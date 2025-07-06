@@ -10,6 +10,10 @@ import {
 } from '@/services/inngest/functions/clerk';
 import { createAiSummaryOfUploadedResume } from '@/services/inngest/functions/resume';
 import { rankApplication } from '@/services/inngest/functions/jobListingApplication';
+import {
+  prepareDailyUserJobListingNotifications,
+  sendDailyUserJobListingNotifications
+} from '@/services/inngest/functions/email';
 
 // Create an API that serves zero functions
 export const { GET, POST, PUT } = serve({
@@ -22,6 +26,8 @@ export const { GET, POST, PUT } = serve({
     clerkUpdateOrganization,
     clerkDeleteOrganization,
     createAiSummaryOfUploadedResume,
-    rankApplication
+    rankApplication,
+    prepareDailyUserJobListingNotifications,
+    sendDailyUserJobListingNotifications
   ]
 });
