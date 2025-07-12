@@ -6,7 +6,7 @@ export function RatingIcons({
   rating,
   className
 }: {
-  rating: number;
+  rating: number | null;
   className?: string;
 }) {
   if (rating === null || rating < 1 || rating > 5) {

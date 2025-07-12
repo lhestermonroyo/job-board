@@ -4,7 +4,11 @@ import { notFound } from 'next/navigation';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import { db } from '@/drizzle/db';
 import { and, eq } from 'drizzle-orm';
-import { JobListingStatus, JobListingTable } from '@/drizzle/schema';
+import {
+  JobListingApplicationTable,
+  JobListingStatus,
+  JobListingTable
+} from '@/drizzle/schema';
 import { hasOrgUserPermission } from '@/services/clerk/lib/orgUserPermissions';
 import { getCurrentOrganization } from '@/services/clerk/lib/getCurrentAuth';
 import { getJobListingIdTag } from '@/features/jobListings/db/cache/jobListings';
@@ -40,6 +44,14 @@ import { AsyncIf } from '@/components/AsyncIf';
 import { ActionButton } from '@/components/ActionButton';
 import { JobListingBadges } from '@/features/jobListings/components/JobListingBadges';
 import { cachedDataVersionTag } from 'v8';
+import { Separator } from '@/components/ui/separator';
+import { getJobListingApplicationJobListingTag } from '@/features/jobListingApplications/db/cache/jobListingApplications';
+import { getUserIdTag } from '@/features/users/db/cache/users';
+import { getUserResumeIdTag } from '@/features/users/db/cache/userResumes';
+import {
+  ApplicationTable,
+  SkeletonApplicationTable
+} from '@/features/jobListingApplications/components/ApplicationTable';
 
 type Props = {
   params: Promise<{ jobListingId: string }>;
@@ -117,6 +129,15 @@ async function SuspensePage({ params }: Props) {
         dialogMarkdown={<MarkdownRenderer source={jobListing.description} />}
         mainMarkdown={<MarkdownRenderer source={jobListing.description} />}
       />
+
+      <Separator />
+
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Applications</h2>
+        <Suspense fallback={<SkeletonApplicationTable />}>
+          <Applications jobListingId={jobListing.id} />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -264,6 +285,82 @@ function featuredToggleButtonText(isFeatured: Boolean) {
       <StarIcon /> Feature
     </Fragment>
   );
+}
+
+async function Applications({ jobListingId }: { jobListingId: string }) {
+  const applications = await getJobListingApplications(jobListingId);
+  const canUpdateRating = await hasOrgUserPermission(
+    'org:job_listing_applications:change_rating'
+  );
+  const canUpdateStage = await hasOrgUserPermission(
+    'org:job_listing_applications:change_stage'
+  );
+
+  return (
+    <ApplicationTable
+      applications={applications.map((application) => ({
+        ...application,
+        user: {
+          ...application.user,
+          resume: application.user.resume
+            ? {
+                ...application.user.resume,
+                markdownSummary: application.user.resume.aiSummary ? (
+                  <MarkdownRenderer
+                    source={application.user.resume.aiSummary}
+                  />
+                ) : null
+              }
+            : null
+        },
+        coverLetterMarkdown: application.coverLetter ? (
+          <MarkdownRenderer source={application.coverLetter} />
+        ) : null
+      }))}
+      canUpdateRating={canUpdateRating}
+      canUpdateStage={canUpdateStage}
+    />
+  );
+}
+
+async function getJobListingApplications(jobListingId: string) {
+  'use cache';
+  cacheTag(getJobListingApplicationJobListingTag(jobListingId));
+
+  const data = await db.query.JobListingApplicationTable.findMany({
+    where: eq(JobListingApplicationTable.jobListingId, jobListingId),
+    columns: {
+      coverLetter: true,
+      createdAt: true,
+      stage: true,
+      rating: true,
+      jobListingId: true
+    },
+    with: {
+      user: {
+        columns: {
+          id: true,
+          name: true,
+          imageUrl: true
+        },
+        with: {
+          resume: {
+            columns: {
+              resumeFileUrl: true,
+              aiSummary: true
+            }
+          }
+        }
+      }
+    }
+  });
+
+  data.forEach(({ user }) => {
+    cacheTag(getUserIdTag(user.id));
+    cacheTag(getUserResumeIdTag(user.id));
+  });
+
+  return data;
 }
 
 async function getJobListing(id: string, orgId: string) {
